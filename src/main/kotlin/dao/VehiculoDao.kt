@@ -6,7 +6,7 @@ import org.jdbi.v3.sqlobject.customizer.BindBean
 import org.jdbi.v3.sqlobject.kotlin.RegisterKotlinMapper
 import org.jdbi.v3.sqlobject.statement.SqlQuery
 import org.jdbi.v3.sqlobject.statement.SqlUpdate
-import javax.inject.Singleton
+import org.jetbrains.kotlin.javax.inject.Singleton
 
 @RegisterKotlinMapper(VehiculoEntity::class)
 interface VehiculoDao {
@@ -21,7 +21,7 @@ interface VehiculoDao {
     fun save(@BindBean vehiculo: VehiculoEntity): VehiculoEntity
 
     @SqlUpdate("DELETE FROM Vehiculo WHERE matricula = :matricula")
-    fun delete(entity: VehiculoEntity): Int
+    fun delete(entity: String): Int
 }
 
 @Singleton
