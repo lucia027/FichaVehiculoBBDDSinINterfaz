@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS vehiculo (
+    matricula IDENTITY NOT NULL PRIMARY KEY,
+    marca VARCHAR NOT NULL,
+    modelo VARCHAR NOT NULL
+)
