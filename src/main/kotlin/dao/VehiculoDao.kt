@@ -18,8 +18,8 @@ interface VehiculoDao {
     fun findById(@Bind("matricula") matricula: String): VehiculoEntity?
 
     @SqlUpdate("INSERT INTO Vehiculo (matricula, marca, modelo) VALUES (:matricula, :marca, :modelo)")
-    fun save(@BindBean vehiculo: VehiculoEntity): VehiculoEntity
+    fun save(@BindBean vehiculo: VehiculoEntity): String
 
     @SqlUpdate("DELETE FROM Vehiculo WHERE matricula = :matricula")
-    fun delete(entity: String): Int
+    fun delete(entity: String): String
 }

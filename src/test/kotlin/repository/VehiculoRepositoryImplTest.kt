@@ -8,6 +8,7 @@ import io.mockk.verify
 import org.example.dao.VehiculoDao
 import org.example.dao.VehiculoEntity
 import org.example.mapper.toModel
+import org.example.models.Vehiculo
 import org.example.repository.VehiculoRepositoryImpl
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @ExtendWith(MockKExtension::class)
 class VehiculoRepositoryImplTest {
@@ -84,10 +86,10 @@ class VehiculoRepositoryImplTest {
         val vehiculoModel = vehiculoEntity.toModel().copy(matricula = "1234MVP")
 
         every {
-            dao.save(match{
+            dao.save(match {
                 it.marca == "Toyota" && it.modelo == "Supra"
             })
-        } returns vehiculoEntity
+        } returns vehiculoEntity.matricula
 
         val result = repositoryImpl.save(vehiculoModel)
 
@@ -99,6 +101,53 @@ class VehiculoRepositoryImplTest {
         )
 
         verify(atLeast = 1) { dao.save(match{it.matricula == "1234MVP" }) }
+    }
+
+    @Test
+    @DisplayName("Delete")
+    fun delete() {
+        val vehiculoEntity = VehiculoEntity(
+            matricula = "1234MVP",
+            marca = "Toyota",
+            modelo = "Supra"
+        )
+
+        val vehiculoEntityFind = vehiculoEntity.copy()
+
+        every { dao.findById("1234MVP") } returns vehiculoEntityFind
+        every { dao.delete("1234MVP") } returns "1234MVP"
+
+        val vehiculoModel = Vehiculo(
+            matricula = "1234MVP",
+            marca = "Toyota",
+            modelo = "Supra"
+        )
+
+        val result = repositoryImpl.delete("1234MVP")
+
+        assertAll(
+            { assertEquals("1234MVP", result?.matricula, "MAtricula incorrecta") },
+            { assertEquals("Toyota", result?.marca, "Marca correcta") },
+            { assertEquals("Supra", result?.modelo, "Modelo correcta") },
+        )
+
+        verify(atLeast = 1) { dao.delete("1234MVP") }
+        verify(atLeast = 1) { dao.findById("1234MVP") }
+    }
+
+    @Test
+    @DisplayName("If not exists not deleted")
+    fun ifNotExists() {
+        val saveresult = null
+
+        every { dao.findById("1234MVP") } returns saveresult
+
+        val result = repositoryImpl.delete("1234MVP")
+
+        assertNull(result)
+
+        verify(atLeast = 0) { dao.delete("1234MVP") }
+        verify(atLeast = 1) { dao.findById("1234MVP") }
     }
 
 }

@@ -29,10 +29,10 @@ class VehiculoRepositoryImpl(val dao: VehiculoDao) : VehiculoRepository {
 
         if (vehiculo != null) {
             val result = dao.delete(matricula)
-            if (result == 0) {
+            if (result == "0") {
                 logger.error { "No se puede borrar el vehiculo con la matriucla: $matricula" }
             }
         }
-        return vehiculo as Vehiculo?
+        return vehiculo?.toModel()
     }
 }
