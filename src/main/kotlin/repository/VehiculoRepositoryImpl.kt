@@ -5,7 +5,6 @@ import org.example.dao.VehiculoDao
 import org.example.mapper.toEntity
 import org.example.mapper.toModel
 import org.example.models.Vehiculo
-import org.jetbrains.kotlin.gradle.idea.proto.com.google.protobuf.copy
 import org.lighthousegames.logging.logging
 
 class VehiculoRepositoryImpl(val dao: VehiculoDao) : VehiculoRepository {
@@ -22,7 +21,7 @@ class VehiculoRepositoryImpl(val dao: VehiculoDao) : VehiculoRepository {
     override fun save(item: Vehiculo): Vehiculo {
         val matricula = dao.save(item.toEntity())
 
-        return item.copy(matricula = matricula)
+        return item.copy(matricula = matricula.toString())
     }
 
     override fun delete(matricula: String): Vehiculo? {
